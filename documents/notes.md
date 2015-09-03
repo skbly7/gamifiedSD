@@ -26,7 +26,16 @@ Tools and usage:
             + |Team Number/Name | Student Name |  #comments | #commits per student | Badges | reward points | Team Rank | Student Rank |
         + Reward points
     + Good to have mechanics :
-        + Classify the comment as bug/linting error / coding standards / code smells within and between classes /
+        + Classify the comment as bug / linting error / coding standards / code smells within and between classes /
+
+List of current tools and supported game mechanics:
+---------------------------------------------------
+
+| Game mechanic | SE concept | CodeBrag | github-comment-counter | PeerPerks | gitpoints |
+| --------------|:----------|:---|:---|:----|:----|
+| leadetboard | code review | No | Yes | No | Yes |
+| Activity stream | Code review | No | Yes | Yes | Yes |
+|  
 
 Issues with the current tools:
 -----------------------------
