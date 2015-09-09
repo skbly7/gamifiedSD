@@ -1,9 +1,6 @@
 ## Gamification for enforcing coding conventions
-
     + FSE'2015 paper(paper attached) titled "Gamification for enforcing coding conventions".
-
     + This study is done as part of the teaching activities of a local post-graduate teaching  institution. The participants are part of separate projects following the agile Scrum methodology.
-
     + The duration of the study is 2months(47 days) and each sprint is for a week's time.
 
 ## principal research questions they answer :
