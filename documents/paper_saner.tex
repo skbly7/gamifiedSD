@@ -1,0 +1,391 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage[pdftex]{graphicx}
+\graphicspath{ {images/} }
+\usepackage{tabularx}
+\usepackage{placeins}
+\usepackage{array}
+
+  \usepackage[pdftex]{graphicx}
+
+\usepackage{flushend}
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+
+\newcounter{magicrownumbers}
+\newcommand\rownumber{\stepcounter{magicrownumbers}\arabic{magicrownumbers}}
+
+\begin{document}
+
+% paper title
+\title{\huge  Quantitative Analysis on Impact of Gamification over Code Review Process. }\vspace{-2ex}
+
+
+% author names and affiliations
+\vspace{-2ex}\author{\IEEEauthorblockN{Saikrishna Sripada\IEEEauthorrefmark{1},
+Y. Raghu Reddy\IEEEauthorrefmark{2}, and
+Shivam Khandelwal\IEEEauthorrefmark{1}}
+
+International Institute of Information Technology, Hyderabad (IIIT-H), India\\
+
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Email:
+\{saikrishna.sripada,shivam.khandelwal\}@research.iiit.ac.in}
+%saikrishna.sripada@research.iiit.ac.in, shivam.khandelwal@research.iiit.ac.in}
+
+\IEEEauthorblockA{\IEEEauthorrefmark{2}Email: raghu.reddy@iiit.ac.in}}%\vspace{-2ex}}
+
+% make the title area
+\maketitle
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract
+
+%===============================
+\begin{abstract}
+
+Gamification has the potential to enhance motivation and help re-invigorate developers to perform repetitive activities like code reviews, change management, knowledge management, issue tracking, etc. Qualitative analysis on the impact of gamification on activities like Collaboration, software implementation, software verification and testing, project management control exist. In this paper we perform Quantitative analysis on the impact of gamification on code review process. We instantiate a gamified version of the code review process from our extensible architectural framework that supports gamification of various software engineering activities. We performed a study consisting of nearly 180+ participants to measure the usefulness of comments given by them during code review process in a gamified versus non-gamified environment. We use text classification algorithms to evaluate the usefulness of code review data. Additionally, measure the impact of gamification by differentiating the code smells and bugs identified in a gamified and non-gamified environment.
+%Gamification serves as a method to enhance motivation and help re-iterate boring tasks. Existing studies present the qualitative analysis on the impact of gamification. In this paper we perform Quantitative analysis on the impact of gamification considering code review process as a gamified instance. We have come up with an architectural framework to assist in building a gamified application for code review process. We present the results of Quantitative analysis performed by using the code smells and bugs identified by developers and measuring the usefulness of comments given by them during code review process in a gamified versus non-gamified environment.
+
+%A model is build to make data-driven predictions and identify the usefulness of code review data. Text classification algorithms are used to evaluate the usefulness of code review data. We extracted data from stack exchance Q \& A platfrom to train our model. The final goal of this effort is to identify the classification algorithm suitable for predicting the usefulness of code review data and analyse the impact of Gamification code review process.
+\end{abstract}
+
+%================================
+
+\begin{IEEEkeywords}
+
+{
+
+ Gamification, Code Reviews, Text Analysis. %\vspace{-3ex}
+
+}
+
+\end{IEEEkeywords}
+
+%===================================
+
+
+% done : /home/ssaduser/categorize.csv
+% (it is much small though.., only first 100-120 comments are labelled as 0/1, because later i thought it might not be needed, we have got huge data from code review..
+% )
+% no keywords
+
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+%\IEEEpeerreviewmaketitle
+
+%=============================
+
+\section{Introduction}
+Empirical studies supporting gamification in software engineering, tools used and frameworks that assist in building gamified tools have been published. Most of these studies deal either with usability of the tool determined by surveys or the involvement of users as a metric to evaluate the usefulness of gamification. Both these methods involves humans.  But there is no study which involves metrics to qualitatively evaluate the usefulness of gamification on Software engineering practices. We train a model to do data-driven predictions and apply this model to predict the usefulness of code review comments given by using the gamified/non-gamified tools. 
+
+To perform this study, we employed five tools to gather the code review comments in both the categories (2 non-gamified and 3 gamified). Supporting arguments on choice of tools we selected is described further in the paper.
+
+Out of these five tools which we adopted, one of the tool is built using an extensible framework, which we have developed to suite the needs of various software engineering activities and comprises of the game design elements\cite{what are game design elements paper} suitable for software engineering\cite{GDE suitable for SE paper}.
+
+The possibility of extraction of code review data has a huge impact in selection of the tools we employed. For the empirical study to be feasible, complete code review data involving code review comments, changeset details, date and time of comments, developer details and reviewer details are essential. We extracted these details from the toosl and exported them in csv format. 
+
+The data we extracted is to be cleaned and converted into features to be fed to a model which will predict the usefulness of comments. For this, we pre-processed the data by following the standard procedure to clean data(involving removing white-space, punctuation, and numbers, converting
+all words to lower case) followed by removing common english stop-words. Then we apply stemming\cite{porter stemming} to reduce the inflected words to their word stem. Word stem is a word without suffixes/prefixes/derivational morphemes (e.g. the derived verbs black-en or standard-ize) etcerta..
+
+This pre-processed data is then served to feature extraction algorithms. As a well known fact, there is no free lunch in finding a better feature extraction algorithm, hence we analysed our study using  TF-IDF, NGram and word2vec algorithms. Our results suggest that word2vec indicates similarity between words for natural language involved in code reviews will generate features when applied on modelling algorithms like SVM/KNN/NB produces better predictions. (Results to show the best combination between TF-IDF|NGRAM|Word2vec and NB|SVM|KNN.
+
+The model we built to predict usefulness has been fed with training data from : earlier microsoft study\cite{p146-bosu paper}, stackexchange's code review data and the code review comments which we manually classified into usefull and not usefulfull based on 1,2,3,4,5 attributes. (as of now,we classifying manually is optional).
+
+The results can also talk on why Kernel ridge regression or Stochastic Gradient Descent or any classification algorithm (even svm|NB|KNN) may not produce better prediction for SE data.
+
+We imply the model we built to predict usefulness on code review data that is collected on gamified applications and non-gamified applications and visualize the usefullness of gamification quantitatively as well as qualitatively.
+
+\subsection{Research questions}
+\begin{itemize}
+%\item Does gamification help in improving user engagement and motivation while performing SE activity(Code review)?
+\item Identify the co-relation between Code Reviews and gamification. Does gamification help?
+\item Found out Game design elements necessary and useful for code review process.
+\item Identify the percentage of usefulness of code review comments. Does gamification helps improve the usefulness of code review comments given?
+%\item Find out the best suited text mining and classification algorithms for SE text data.
+\item Use code smells within that code and predict the types of bugs in the code written.
+-- code smells from last year, and bugs in the same, apply labels for training data. Similarly, code smells marked in this year comments. and use it as test data.
+
+%\item present the evaluation of architectural framework built.
+\end{itemize}
+
+%=========================
+\section{Related work.}
+
+\subsection{Code Reviews.}
+Software engineering activities while designing a product involves various activities right from requirement gathering to maintenance of product. As a whole the process that is followed while and after building the product will play a definite role in the cost of the product. Bug detection for example, bugs caught during the testing  phase or even early will reduce the maintenance cost of a product many fold while compared to the same bug caught after release of product. \cite{needed}. This process of bug detection can be further moved into early development phase by performing code inspections and code reviews. Code reviews involve developers who are expert in the domain and technology to manually walk through the code line by line and give comments which can identify functionality defects, identify variations in coding style followed, performance enhancements, suggestion of better patterns, identify code smells, suggestions to re-factor code etcetra.. while Peer code reviews act as an effective strategy to catch bugs in early stages of product development \cite{needed} it is often seen as a boring task \cite{needed}.
+
+\subsection{Code smells and bug types.}
+
+
+\subsection{Gamification.}
+Gamifying a task that is usually considered boring or time taking is seen as an effective way in helping users to performing the task better. Gamification is applied in various domains and is proven to be useful in performing the boring tasks with better output. Gamification of software engineering tasks often helped developers to perform tasks better \cite{needed}. Gamification of software engineering tasks has helped developers complete the boring tasks. \cite{needed}. Earlier studies \cite{needed} deal either with usability of the tool determined by surveys or the involvement of users as a metric to evaluate the usefulness of gamification. Both these methods involves humans.  But there is no study which involves metrics to qualitatively evaluate the usefulness of gamification on Software engineering practices. We try to attempt solving this problem in this work of ours.
+
+\subsection{Text Mining.}
+software  
+
+\subsection{Text Analysis.}
+characteristics of useful code reviews an empirical study at microsoft
+\subsubsection{Feature extraction and classification algorithms.}
+
+\subsection{stackexchange}
+
+Reasons/Benifits of using stack exchange:
+In github in-line code review tasks, the code will be reviewed for which a pull request is created. Once the comments are answered and an updated code is pushed into the repository, The comments given during an earlier pull request and the code attached with the pull request will bot be in syn. Hence The code review comments extracted, might not be valid for the existing code after a point of time. Whereas in stack exchange data, the comments and code that is under review will remain in-tact. 
+
+Other code review tools like gerrit and phabricator will also store the code that is under review and sync the code with the comments. But identifying the usefulness of code review comments cannot be done since there are no metrics to identify the same. In the case of stack exchange data, the question posted for the code to be under review and the code review comments given for the question will have upvotes and downvotes from the community which includes developers who have expertise in the related technology. This gives us the oppurtunity to identify the usefulness of code review comments.
+
+\subsection{Metrics to evaluate architectural framework.}
+
+
+%===========================
+\section{Experimental setup}
+
+%+++++++++++
+\subsection{Study Design}
+%\subsection{Review Process}
+
+This study was carried out as part of SSAD course offered in IIIT-Hyderabad. All students (approximately 183) were taught code review processes. Initially, all these students were given programming assignment which consisited of programming their own Donkey Kong game using oops concepts.
+Now, in second phase, all these students were divided into 5 groups each consisting of approx 35 students, and were asked to used one of the code review tool as mentioned in above section.
+
+\subsection{Gamified Vs non Gamified environments}
+%\subsubsection{Tools Involved}
+\subsubsection{Comparision and analysis of gamified tools}
+\begin{itemize}
+\item Why did we choose these three tools.?
+\end{itemize}
+
+%====
+\begin{table}[ht]
+\centering
+\caption{Count of code review comments given by students.}
+\begin{tabular}{|c|p{2cm}|c|} \hline
+\multicolumn{2}{|c|}{Tool} & game design elements involved  \\ \hline
+ \setcounter{magicrownumbers}{0}\rownumber & & \\
+ \rownumber & & \\
+ \rownumber & & \\
+ \rownumber & & \\
+ \hline
+\end{tabular}
+\label{tab:tools}
+\end{table}
+%====
+
+%+++++++++++
+\subsubsection{Architectural framework for building gamified applications.}
+
+%=====
+\begin{figure}[ht]
+\hspace{-6ex}
+\centering
+\includegraphics[width=0.5\textwidth]{images/arch.png}
+\caption{Architecture of the gamified application.}
+\label{fig:architecture}
+\end{figure}
+%====
+
+%+++++++++++
+\subsection{Dataset Generation}
+The training data set served for our model is extracted from code review product\footnote{http://codereview.stackexchange.com/} of stack exchange platform. While determining the useful set of review comments from the stack exchange platform, we followed the below pattern :
+Firstly, we chose "python" and its related tags \footnote{http://codereview.stackexchange.com/tags} that are suitable for our code review data. We have applied "python" "python2.7", "algorithms", "datastructures", "begineer", "oop", "strings", "parsing" while extracting comments from code review platform of stackexchange. \newline During the second step, We chose the questions in the order of those that have higher upvotes to lesser upvotes. \newline Third, The most upvoted and zero upvotses/downvoted code review comments for these selected questions are extracted. \newline Fourth, We have manually assigned labels to perform feature extraction on the training data.
+
+The test data for our experiments is the code review data collected from $185$ students who performed code review using the five tools. The number of comments students has given while performing code review is shown in Table \ref{tab:commentscount}.
+
+%===================================================
+\begin{table}[ht]
+\centering
+\caption{Count of code review comments given by students.}
+\begin{tabular}{|c|p{2.5cm}|p{1.5cm}|p{1.5cm}|} \hline
+\multicolumn{2}{|c|}{Tool} & \# students involved in code review & Number of comments   \\ \hline \hline
+ \setcounter{magicrownumbers}{0}\rownumber & Bitbucket code review platform & &  \\ 
+ \rownumber & Phabricator & &  \\
+ \rownumber & Github commemt counter & &  \\
+ \rownumber & codebrag & & \\
+ \rownumber & gamified instance generated using the proposed framework & &\\
+ \hline
+\end{tabular}
+\label{tab:commentscount}
+\end{table}
+%===================================================
+
+
+%+++++++++++
+\subsection{Preprocessing}
+
+\subsubsection{Training data set from stackexchange.}
+
+The data set from various stackexchange platforms is extracted and made available publicly \footnote{https://archive.org/download/stackexchange}. We have awarded normalized scores to answers that 
+
+\subsubsection{Attributes for code review comments in stack exchange} \label{Attributes}
+
+answer_vote_count': 10,
+is_accepted': 12, 
+thread_has_accepted': -3, 
+question_vote_count': 8, 
+reviewer_repo': 7,
+# 'ratio_ans_and_best_ans': 1,
+avg_repo_question_people_involved': 6,
+avg_repo_answer_people_involved': 5,
+people_involved_question': 4, # Total number of users involved in the thread.
+people_involved_answer': 3, #people who have commented on the answer.
+ans_count': 1
+
+\begin{itemize}
+\item Is the answer accepted or not.
+\item \# people involved in an upvoted answer and \# people involved in the code review thread.
+\item \# of comments within each Answer.
+\item Upvotes.
+\item Reputation of reviewer.
+\end{itemize}
+
+%+++++++++++
+\subsubsection{Normalization and Feature Extraction}
+
+All the attributes mentioned in \ref{Attributes} are assigned a normalized score for each of the code review thread. The Attributes  are initially standardised using a Minimum-Maximum scale from zero to one. This is performed using scikit-learn "preprocessing" module. This scaled data is assigned weight according to the following rules :
+
+\begin{enumerate}
+\item 
+\end{enumerate}
+The data is then obtained as a numerical vector and is normalised following the above rules, where a higher score indicates the highest usefulness of comments. The Highest and lowest weights obtained are $highest$ and $lowest$
+
+A set of stop words that are used to enhance the features of code review data is inherited from \footnote{ttps://github.com/Alir3z4/stop-words} 
+
+%+++++++++++
+\subsubsection{Characteristics of Usefulness of comments}
+We have collected $1000$ comments from stack exchange's code review platform under the python tag. All these comments are related to python code review questions. The top 50 stemmed terms in most useful category of accepted comments and unaccepted comments are shown in Table \ref{tab:Top50}.
+
+%=====
+\begin{table}[ht]
+\centering
+\caption{Top stemmed words after stemming is performed on words from code review comments}
+\begin{tabular}{|cccc|} \hline
+\multicolumn{4}{|c|} {Top Terms from most upvoted comments }  \\ \hline
+a & b & c & d \\
+e & f & g & h \\
+\hline
+
+\multicolumn{4}{|c|} {Top Terms from most downvoted comments} \\ \hline
+i & j & k & l \\
+m & n & o & p \\
+\hline
+\end{tabular}
+\label{tab:Top50}
+\end{table}
+%=====
+
+%+++++++++++++++++++
+\subsection{Predictive Model Generation}
+
+%=====
+\begin{figure}[ht]
+\hspace{-6ex}
+\centering
+\includegraphics[width=0.5\textwidth]{images/textclassificaiton.png}
+\caption{Text Classification Process.}
+\label{fig:activity}
+\end{figure}
+%====
+
+%===========================
+
+\section{Emperical Analysis}
+%\Section{Experimental Results}
+
+%++++++++++++++
+\subsection{Survey results}
+
+%====
+\begin{table}[h]
+\centering
+\caption{Most common game design elements required.}
+\begin{tabular}{|ccc|} \hline
+ \multicolumn{3}{|c|}{Most common game designed elements for Code Review process}  \\ \hline
+ a & a & a \\
+ a & a & a \\
+ \hline
+\end{tabular}
+\label{tab:gamede}
+\end{table}
+%====
+
+%====
+\begin{table}[h]
+\centering
+\caption{Correlation between bug types and code smells within code.}
+\begin{tabular}{|c|c|} \hline
+ Bug types & code smells \\ \hline
+ & \\
+ \hline
+\end{tabular}
+\label{tab:bugsandsmells}
+\end{table}
+%====
+
+\begin{tabular}{|p{3cm}|c|c|} \hline
+Aspect & Gamified environment & Non Gamified environment \\ \hline
+Average time spent by students & & \\
+Number of Bugs identified  & & \\
+Number of code smells &  \\
+ & 
+\end{tabular}
+
+%++++++++++++++
+\subsection{Results from data generated by tools}
+These are some parameters which would be evaluated tool wise.
+\begin{itemize}
+\item Analyse the comments (usefulness)
+\item 
+\item Access logs (if possible)
+\end{itemize}
+
+
+%++++++++++++++
+\subsection{Visualization of usefulness of comments with and without Gamification.}
+The usefulness of comments is calcluates using "precision", "recall", "accuracy" and "Fscore" for each method.
+
+%===================================================
+\begin{table}[h]
+\centering
+\caption{Results}
+\begin{tabular}{|c|p{2cm}|c|c|c|c|}\hline
+\multicolumn{2}{|c|}{Classification Algorithm} & Precision & Recall & Accuracy & FScore  \\ \hline \hline
+ \setcounter{magicrownumbers}{0}\rownumber & NB & & & &  \\ 
+ \rownumber & SVM & & & & \\
+ \rownumber & KNN & & & & \\
+ \rownumber & Decision Tree & & & & \\
+ \rownumber & Random Forest & & & & \\
+ \hline
+\end{tabular}
+\label{tab:results}
+\end{table}
+%++++++++++++++
+\subsection{Evaluation of Architectural framework.}
+
+
+%========================
+\section{Discussion}
+
+
+%===========
+
+\section{Threats to validity.}
+
+%=========================
+
+\section{Conclusion and Furute Work.}
+The conclusion goes here.
+
+%==========================
+%\begin{thebibliography}{1}
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,quasoq}
+\end{document}
+
+
