@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block head_extra %}
+    <link href="{{ STATIC_URL }}css/diffpage.css" rel="stylesheet" media="screen">
+{% endblock %}
+
+{% block page_title %}
+    [{{ commit_sequence.pk }}] {{ commit_sequence }}{% if commit_sequence.user %}({{ commit_sequence.user }}){% endif %}
+{% endblock %}
+
+{% block top_bar_title %}
+<a href="#">{{ commit_sequence }}</a>{% if commit_sequence.user %} ({{ commit_sequence.user }}){% endif %}
+{% endblock %}
+
+{% block entire_body %}
+<script src="{{ STATIC_URL }}js/diffpage.js"></script>
+<script type="text/javascript">
+    $(function() {
+        init_diffpage({
+            'new_comment_url': "{% url 'ajax_new_comment' commit_sequence.pk %}",
+            'save_comment_url': "{% url 'ajax_save_comment' commit_sequence.pk %}",
+            'del_comment_url': "{% url 'ajax_del_comment' commit_sequence.pk %}",
+            'export_comments_url': "{% url 'export_comments' commit_sequence.pk %}"
+        });
+    });
+</script>
+<ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+<li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+<li><a href="/">CodeReview</a></li><li class="active"><a href="#">{{ commit_sequence }}</a>{% if commit_sequence.user %} (added by {{ commit_sequence.user }}){% endif %}</li>
+</ul>
+
+<!--<div id="subtop_fixed_bar">-->
+    <!--<div class="fixed_bar_dull">Commit:</div>-->
+    <!--<a id="current_h3_fixed" class="fixed_link jumps-to-anchor"></a>-->
+<!--</div>-->
+<!--<div id="subsubtop_fixed_bar">-->
+    <!--<div class="fixed_bar_dull">File:</div>-->
+    <!--<a id="current_h4_fixed" class="fixed_link jumps-to-anchor"></a>-->
+<!--</div>-->
+
+<div id="horizontal_highlighter"></div>
+<div id="rowspan_reticle"></div>
+
+{% if commit_sequence.commits.all %}
+<section class="panel panel-default">
+<header class="panel-heading">
+Commits in this request
+</header>
+<div class="table-responsive">
+<table class="table table-striped b-t b-light">
+<thead>
+<tr>
+<th>Sno</th>
+<th>Hash</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+{% for commit in commit_sequence.commits.all %}
+<tr>
+<td>{{ commit.id }}</td>
+<td><a href="#{{ commit.make_anchor }}">{{ commit.sha1 }}</a></td>
+<td>
+<a href="{{ commit.make_anchor }}"><i class="fa fa-plus"></i></a>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</section>
+{% endif %}
+
+{{ commit_sequence_html|safe }}
+
+{% endblock %}

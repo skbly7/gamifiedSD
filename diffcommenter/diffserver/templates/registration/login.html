@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-dark">
+<head>
+  <meta charset="utf-8" />
+  <title>GamifiedSD | Signin</title>
+  <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/animate.css" type="text/css" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/font.css" type="text/css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/app.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="{{ STATIC_URL }}js/ie/html5shiv.js"></script>
+    <script src="{{ STATIC_URL }}js/ie/respond.min.js"></script>
+    <script src="{{ STATIC_URL }}js/ie/excanvas.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <section id="content" class="m-t-lg wrapper-md animated fadeInUp">
+    <div class="container aside-xxl">
+      <a class="navbar-brand block" href="/">GamifiedSD</a>
+      <section class="panel panel-default bg-white m-t-lg">
+        <header class="panel-heading text-center">
+          <strong>Sign in</strong>
+        </header>
+        <form action="/login/" class="panel-body wrapper-lg" method="POST">
+                {% csrf_token %}
+            {{ form.non_field_errors }}
+          <div class="form-group">
+            <label class="control-label">Email</label>
+            <input type="email" placeholder="eg. someone@example.com" class="form-control input-lg" name="username">
+          </div>
+            {{ form.username.errors }}
+          <div class="form-group">
+            <label class="control-label">Password</label>
+            <input type="password" id="inputPassword" placeholder="Password" class="form-control input-lg" name="password">
+          </div>
+            {{ form.password.errors }}
+            <input type="text" name="next" value="/" hidden>
+          <button type="submit" class="btn btn-primary">Sign in</button>
+          <div class="line line-dashed"></div>
+          <p class="text-muted text-center"><small>Do not have an account?</small></p>
+          <a href="{% url 'register' %}" class="btn btn-default btn-block">Create an account</a>
+        </form>
+      </section>
+    </div>
+  </section>
+  <!-- footer -->
+  <footer id="footer">
+    <div class="text-center padder">
+      <p>
+        <small>Making Software Developers life easier</small>
+      </p>
+    </div>
+  </footer>
+
+  <!-- / footer -->
+  <script src="{{ STATIC_URL }}js/jquery.min.js"></script>
+  <!-- Bootstrap -->
+  <script src="{{ STATIC_URL }}js/bootstrap.js"></script>
+  <!-- App -->
+  <script src="{{ STATIC_URL }}js/app.js"></script>
+  <script src="{{ STATIC_URL }}js/app.plugin.js"></script>
+  <script src="{{ STATIC_URL }}js/slimscroll/jquery.slimscroll.min.js"></script>
+
+</body>
+</html>

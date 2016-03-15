@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block entire_body %}
+<ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+<li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+<li>CodeReview</li><li class="active">{% block top_bar_title %}Badges{% endblock %}</li>
+</ul>
+
+<div class="m-b-md">
+<h3 class="m-b-none">Badges</h3>
+</div>
+              <section class="panel panel-default">
+                <header class="panel-heading">
+                  Which one are you targetting ? :D
+                </header>
+                <div class="table-responsive">
+                  <table class="table table-striped b-t b-light">
+                    <thead>
+                      <tr>
+                        <th width="150">Badge</th>
+                        <th>Name</th>
+                        <th>Criteria</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+{% for badge in badges %}
+                      <tr>
+                        <td><img src="{{ STATIC_URL }}images/{{ badge.url }}" /></td>
+                        <td>{{ badge.name }}</td>
+                        <td>{{ badge.criteria }}</td>
+                      </tr>
+{% endfor %}
+                  </tbody>
+                  </table>
+                </div>
+              </section>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block entire_body %}
+<ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+<li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+<li>CodeReview</li><li class="active">{% block top_bar_title %}Comment LeaderBoard{% endblock %}</li>
+</ul>
+
+<div class="m-b-md">
+<h3 class="m-b-none">Badges</h3>
+</div>
+              <section class="panel panel-default">
+                <header class="panel-heading">
+                  Are you winning ? Because no one remembers who went to Moon second.. :)
+                </header>
+                <div class="table-responsive">
+                  <table class="table table-striped b-t b-light">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Score</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+{% for user in data %}
+                      <tr>
+                        <td>{{ user.user }}</td>
+                        <td>{{ user.total }}</td>
+                      </tr>
+{% endfor %}
+                  </tbody>
+                  </table>
+                </div>
+              </section>
+
+{% endblock %}

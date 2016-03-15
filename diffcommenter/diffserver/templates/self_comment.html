@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block entire_body %}
+{% load gravatar %}
+<ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+<li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+<li>CodeReview</li><li class="active">{% block top_bar_title %}Timeline{% endblock %}</li>
+</ul>
+
+<div class="m-b-md">
+<h3 class="m-b-none">Your comments</h3>
+</div>
+
+    <section class="comment-list block">
+{% for action in activity %}
+        <article id="comment-id-1" class="comment-item">
+            <a class="pull-left thumb-sm avatar">
+                <!--<img src="http://www.gravatar.com/avatar/{{action.user.username|md5 }}?s=50" class="img-circle">-->
+                <img src="{{ STATIC_URL }}images/avatar_default.jpg" class="img-circle">
+            </a>
+            <span class="arrow left"></span>
+            <section class="comment-body panel panel-default">
+                <header class="panel-heading bg-white">
+                <a href="#">{{action.user}}</a>
+                    <span class="text-muted m-l-sm pull-right">
+                    <i class="fa fa-clock-o"></i>
+                    {{action.added|timeage}}
+                    </span>
+                </header>
+            <div class="panel-body">
+            <div>{{action.text}}</div>
+            <div class="comment-action m-t-sm">
+            <a href="/S{{action.diff.commit.commit_sequence.id}}/#comment{{action.id}}" class="btn btn-default btn-xs">
+            <i class="fa fa-link text-muted"></i> View with diff
+            </a>
+            </div>
+            </div>
+            </section>
+        </article>
+{% endfor %}
+    </section>
+
+{% endblock %}

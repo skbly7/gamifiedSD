@@ -1,0 +1,30 @@
+<div id="{{ comment.make_anchor }}" class="comment {% if comment.user == user %}my-own-comment{% endif %}" data-pk="{{ comment.pk }}" data-from="{{ comment.first_line_anchor }}" data-to="{{ comment.last_line_anchor }}">
+    <div class="comment-title">
+        <span class="comment-date">
+            <a href="#{{ comment.make_anchor }}" class="jumps-to-anchor">{{ comment.added }}</a>
+        </span>
+        <span class="user-name">{{ comment.user }}</span>
+        <span class='save-status'></span>
+        {% if comment.user == user %}
+        <span class='del-comment'>
+            <a href="#" class="jslink">delete</a>
+        </span>
+        {% else %}
+        <span class='reply-to-comment'>
+            <a href="#" class="jslink">reply</a>
+        </span>
+        {% endif %}
+        <span class='comment-doubly-linked'>
+            <a href="#" class="jslink prev-comment">^ previous</a>
+            <a href="#" class="jslink next-comment">next v</a>
+        </span>
+    </div>
+    <div class="comment-body">
+    {% csrf_token %}
+    {% if comment.user == user %}
+    <textarea>{{ comment.text }}</textarea>
+    {% else %}
+    <pre>{{ comment.text }}</pre>
+    {% endif %}
+    </div>
+</div>
