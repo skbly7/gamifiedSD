@@ -245,7 +245,7 @@ function init_diffpage(opts) {
     function reset_sub_type(comment) {
         $('.bug', comment).hide();
         $('.codesmell', comment).hide();
-        $('.'+$('.type', comment).val(), comment).show();
+        $('.' + $('.type', comment).val(), comment).show();
     }
 
     $('.comment textarea').live('keyup', function (ev) {
@@ -265,7 +265,7 @@ function init_diffpage(opts) {
         comment.data('save-timeout', timeout_id);
     });
 
-    $('.comment .type').on('change', function (ev) {
+    $('.type').live('change', function (ev) {
         var self = $(this),
             comment = self.closest('.comment'),
             timeout_id,
@@ -285,7 +285,7 @@ function init_diffpage(opts) {
     });
 
 
-    $('.bug').on('change', function (ev) {
+    $('.bug').live('change', function (ev) {
         var self = $(this),
             comment = self.closest('.comment'),
             timeout_id,
@@ -302,7 +302,7 @@ function init_diffpage(opts) {
         comment.data('save-timeout', timeout_id);
     });
 
-    $('.codesmell').on('change', function (ev) {
+    $('.codesmell').live('change', function (ev) {
         var self = $(this),
             comment = self.closest('.comment'),
             timeout_id,
