@@ -6,9 +6,12 @@
 </ul>
 
 <div class="m-b-md">
-<h3 class="m-b-none">Badges</h3>
+<h3 class="m-b-none">Leaderboard</h3>
 </div>
-              <section class="panel panel-default">
+
+
+{% if gamify.user_category == 2 or gamify.user_category == 3 %}
+    <section class="panel panel-default">
                 <header class="panel-heading">
                   Are you winning ? Because no one remembers who went to Moon second.. :)
                 </header>
@@ -23,7 +26,11 @@
                     <tbody>
 {% for user in data %}
                       <tr>
-                        <td>{{ user.user }}</td>
+                        {% if request.user == user.user %}
+                            <td><b>{{ user.user }}</b></td>
+                        {% else %}
+                            <td>[[ name hidden ]]</td>
+                        {% endif %}
                         <td>{{ user.total }}</td>
                       </tr>
 {% endfor %}
@@ -31,5 +38,7 @@
                   </table>
                 </div>
               </section>
-
+{% else %}
+    Sorry but this page isn't available for you.
+{% endif %}
 {% endblock %}

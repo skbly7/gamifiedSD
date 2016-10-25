@@ -28,7 +28,7 @@
                     <tbody>
 {% for seq in sequences %}
                       <tr>
-                        <td>{{ seq.pk }}</td>
+                        <td>-</td>
                         <td><a href="{{ seq.get_edit_url }}"><i class="fa fa-code-fork"></i> {{ seq.title }}</a></td>
                         <td>SSAD</td>
                         <td><a href="{{ seq.get_edit_url }}"><i class="fa fa-bar-chart"></i> {{ seq.commits.all|length }} commit(s)</a></td>

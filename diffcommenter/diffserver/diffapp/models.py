@@ -159,6 +159,8 @@ class LineComment(models.Model):
     added = models.DateTimeField(u'Дата добавления', auto_now_add=True)
     text = models.TextField(u'Текст коммента', blank=True)
     user = models.ForeignKey('auth.User', verbose_name=u'Кто добавил', related_name='comments')
+    type = models.TextField()
+    subtype = models.TextField()
 
     first_line_anchor = models.TextField(u'Начало комментируемого диапазона')  # по факту это индекс в comment.lines
     last_line_anchor = models.TextField(u'Конец комментируемого диапазона')  # коммент визуально разместится под этой строкой

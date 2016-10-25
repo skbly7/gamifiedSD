@@ -22,12 +22,32 @@ from django.db.models import Q
 from diffapp.models import CommitSequence, Diff, LineComment, Badge, BadgeAward
 from diffapp.diffimport import make_commit_sequence
 
+import random
+import logging
+logger = logging.getLogger(__name__)
+
+
+def get_assigned_reviews(seed):
+    random.seed(seed)
+    selected = {}
+    logger.debug("this is a debug message!")
+    logger.info("this is a info message!")
+    logger.error("this is a error message!")
+    while len(selected) < 3:
+        selected[random.randrange(0,20)] = 1
+    return selected.keys()
 
 def index(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(reverse('login'))
-    LAST_N = 20
-    sequences = CommitSequence.objects.filter(private=0).order_by('-id').prefetch_related('commits')[:LAST_N]
+
+    assigned = get_assigned_reviews(request.user.id)
+
+    pre_sequences = CommitSequence.objects.filter(private=0).order_by('-id').prefetch_related('commits')
+    sequences = []
+    sequences.append(pre_sequences[assigned[0]])
+    sequences.append(pre_sequences[assigned[1]])
+    sequences.append(pre_sequences[assigned[2]])
     c = {
         'sequences': sequences,
         'settings': settings,
@@ -47,10 +67,17 @@ def gamify_data(user):
     dict['self_badges'] = self_badges(user)
     dict['review_count'] = LineComment.objects.all().filter(user=user).values('diff').distinct().count()
     dict['comment_count'] = LineComment.objects.all().filter(user=user).count()
+    dict['comment_count_mod'] = ((LineComment.objects.all().filter(user=user).count() % 10) * 10) + 10
+    dict['comment_count_level'] = int(LineComment.objects.all().filter(user=user).count() / 10) + 1
     dict['self_score'] = dict['comment_count'] * 4
+    dict['user_category'] = user.id % 4
+
+
     return dict
 
 def timeline(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('login'))
     activity = LineComment.objects.all().filter(~Q(text='')).order_by('-added')[:20]
     return render(request, "timeline.html", {
         'activity' : activity,
@@ -58,13 +85,17 @@ def timeline(request):
     })
 
 def self_comment(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('login'))
     activity = LineComment.objects.all().filter(user=request.user).filter(~Q(text='')).order_by('-added')[:20]
-    return render(request, "timeline.html", {
+    return render(request, "timeline_self.html", {
         'activity' : activity,
         'gamify' : gamify_data(request.user)
     })
 
 def badges(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('login'))
     badges_collection = Badge.objects.all()
     return render(request, "badges.html", {
         'badges' : badges_collection,
@@ -72,6 +103,8 @@ def badges(request):
     })
 
 def comment_board(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('login'))
     user_wise_count = LineComment.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
     for user in user_wise_count:
         user['user'] = User.objects.get(id=user['user'])
@@ -99,7 +132,7 @@ def register(request):
             return cleaned_data
 
     form = RegisterForm(request.POST or None)
-    if form.is_valid():
+    if form.is_valid() and False:
         args = dict(
             username=form.cleaned_data['username'],
             password=form.cleaned_data['password']
@@ -138,8 +171,17 @@ def award_badge_conditions(user):
 
 
 def show_commit_sequence(request, object_id):
-    """ TODO отрефакторить, вынести в шаблоны и пр.
-    """
+    assigned = get_assigned_reviews(request.user.id)
+    pre_sequences = CommitSequence.objects.filter(private=0).order_by('-id').prefetch_related('commits')
+
+    # print pre_sequences[assigned[0]].pk, pre_sequences[assigned[1]].pk, pre_sequences[assigned[2]].pk
+    obj_id = int(object_id)
+    # print obj_id
+
+    if obj_id != pre_sequences[assigned[0]].pk and obj_id != pre_sequences[assigned[1]].pk and obj_id != pre_sequences[assigned[2]].pk:
+        return HttpResponse("Dear " + str(request.user) +
+                            ",<br>You are not authorized to view this. This has been logged.")
+
     outfile = StringIO()
     try:
         commit_sequence = CommitSequence.objects.filter(
@@ -177,7 +219,7 @@ def show_commit_sequence(request, object_id):
         python_kw_set = set(keyword.kwlist)
 
         comments_by_last_line_anchor = defaultdict(list)
-        for comment in self.comments.all().order_by('id'):
+        for comment in self.comments.all().filter(user=request.user).order_by('id'):
             comments_by_last_line_anchor[comment.last_line_anchor].append(comment)
 
         for line_i, line in enumerate(self.lines):
@@ -257,9 +299,8 @@ def show_commit_sequence(request, object_id):
     c = {
         'commit_sequence_html': outfile.getvalue(),
         'commit_sequence': commit_sequence,
-        'comments': LineComment.objects.filter(
-            diff__commit__commit_sequence=commit_sequence),
-        'gamify' : gamify_data(request.user)
+        'comments': LineComment.objects.filter(diff__commit__commit_sequence=commit_sequence).filter(user=request.user),
+        'gamify': gamify_data(request.user)
     }
     return render(request, "commit_sequence.html", c)
 
@@ -304,7 +345,8 @@ def ajax_mark_as_reviewed(request, commit_sequence_id):
 def ajax_save_comment(request, commit_sequence_id):
     if not all([
             request.POST.get('comment_id'),
-            request.POST.get('text')]):
+            request.POST.get('type'),
+            request.POST.get('subtype')]):
         return HttpResponse(status=400)
 
     if not request.user.is_authenticated():
@@ -319,6 +361,8 @@ def ajax_save_comment(request, commit_sequence_id):
         return HttpResponse(u'Only author can change his comments', status=403)
 
     comment.text = request.POST['text']
+    comment.type = request.POST['type']
+    comment.subtype = request.POST['subtype']
     comment.save()
     award_badge_conditions(request.user)
     return HttpResponse('OK')
@@ -417,13 +461,14 @@ def export_comments_redmine(request, commit_sequence_id):
 
 @csrf_exempt
 def submit_diff_api(request):
+    return
     """ Вьюха для API публикации диффов """
     title = request.POST.get('title')
     diff = request.POST.get('diff')
     login = request.POST.get('login')
     password = request.POST.get('password')
     client_version = request.POST.get('client_version')
-    if client_version != settings.CLIENT_VERSION:
+    if client_version != settings.CLIENT_VERSION or False:
         return HttpResponseBadRequest(
            'Version of your client ({0}) is outdated. '
            'Current version is {1}. '
@@ -434,9 +479,10 @@ def submit_diff_api(request):
                request.build_absolute_uri(reverse('download_to_review'))
            )
         )
+
     if not all((title, diff, login, password)):
         return HttpResponse('Not all parameters are specified (title, diff, login, password - something was empty)', status=400)
-    print vars(User.objects.all())
+    # print vars(User.objects.all())
     user = get_object_or_404(User, username=login)
     if not user.check_password(password):
         return HttpResponse('Password is incorrect', code=403)
@@ -444,6 +490,7 @@ def submit_diff_api(request):
     diff_lines = diff.split('\n')
 
     sequence = make_commit_sequence(diff_lines, user=user, title=title)
+    print sequence.id
     url = request.build_absolute_uri(sequence.get_edit_url())
     return HttpResponse(url)
 

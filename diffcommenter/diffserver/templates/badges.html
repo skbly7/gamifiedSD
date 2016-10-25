@@ -8,6 +8,8 @@
 <div class="m-b-md">
 <h3 class="m-b-none">Badges</h3>
 </div>
+
+{% if gamify.user_category == 1 or gamify.user_category == 3 %}
               <section class="panel panel-default">
                 <header class="panel-heading">
                   Which one are you targetting ? :D
@@ -33,5 +35,7 @@
                   </table>
                 </div>
               </section>
-
+{% else %}
+    Sorry but this page isn't available for you.
+{% endif %}
 {% endblock %}

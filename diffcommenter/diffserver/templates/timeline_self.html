@@ -7,13 +7,11 @@
 </ul>
 
 <div class="m-b-md">
-<h3 class="m-b-none">Timeline</h3>
+<h3 class="m-b-none">Your recent comments</h3>
 </div>
 
     <section class="comment-list block">
-
-      {% if gamify.user_category == 2 or gamify.user_category == 3 %}
-        {% for action in activity %}
+{% for action in activity %}
         <article id="comment-id-1" class="comment-item">
             <a class="pull-left thumb-sm avatar">
                 <!--<img src="http://www.gravatar.com/avatar/{{action.user.username|md5 }}?s=50" class="img-circle">-->
@@ -50,10 +48,7 @@
             </div>
             </section>
         </article>
-        {% endfor %}
-    {% else %}
-          Sorry but this page isn't available for you.
-    {% endif %}
+{% endfor %}
     </section>
 
 {% endblock %}

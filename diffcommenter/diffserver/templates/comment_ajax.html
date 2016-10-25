@@ -23,6 +23,40 @@
     {% csrf_token %}
     {% if comment.user == user %}
     <textarea>{{ comment.text }}</textarea>
+        <br>
+        <select class="type">
+        <option>Type</option>
+        <option value="bug" {% if comment.type == 'bug' %}selected{% endif %}>Bug</option>
+        <option value="codesmell" {% if comment.type == 'codesmell' %}selected{% endif %}>CodeSmell</option>
+        </select>
+        <select class="bug" {% if comment.type != 'bug' %}style="display: none"{% endif %}>
+            <option>SubType</option>
+            <option value="Arithmetic" {% if comment.subtype == 'Arithmetic' %}selected{% endif %}>Arithmetic</option>
+            <option value="Logic" {% if comment.subtype == 'Logic' %}selected{% endif %}>Logic</option>
+            <option value="Syntax" {% if comment.subtype == 'Syntax' %}selected{% endif %}>Syntax</option>
+            <option value="Resource" {% if comment.subtype == 'Resource' %}selected{% endif %}>Resource</option>
+            <option value="Interfacing" {% if comment.subtype == 'Interfacing' %}selected{% endif %}>Interfacing</option>
+            <option value="Performance" {% if comment.subtype == 'Performance' %}selected{% endif %}>Performance</option>
+            <option value="Other" {% if comment.subtype == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+
+        <select class="codesmell" {% if comment.type != 'codesmell' %}style="display: none"{% endif %}>
+            <option>SubType</option>
+            <option value="Duplicated code" {% if comment.subtype == 'Duplicated code' %}selected{% endif %}>Duplicated code</option>
+            <option value="Contrived complexity" {% if comment.subtype == 'Contrived complexity' %}selected{% endif %}>Contrived complexity</option>
+            <option value="Large class" {% if comment.subtype == 'Large class' %}selected{% endif %}>Large class</option>
+            <option value="Inappropriate intimacy" {% if comment.subtype == 'Inappropriate intimacy' %}selected{% endif %}>Inappropriate intimacy</option>
+            <option value="Refused bequest" {% if comment.subtype == 'Refused bequest' %}selected{% endif %}>Refused bequest</option>
+            <option value="Lazy class" {% if comment.subtype == 'Lazy class' %}selected{% endif %}>Lazy class</option>
+            <option value="Excessive use of literals" {% if comment.subtype == 'Excessive use of literals' %}selected{% endif %}>Excessive use of literals</option>
+            <option value="Cyclomatic complexity" {% if comment.subtype == 'Cyclomatic complexity' %}selected{% endif %}>Cyclomatic complexity</option>
+            <option value="Downcasting" {% if comment.subtype == 'Downcasting' %}selected{% endif %}>Downcasting</option>
+            <option value="Orphan variable" {% if comment.subtype == 'Orphan variable' %}selected{% endif %}>Orphan variable</option>
+            <option value="Too many parameters" {% if comment.subtype == 'Too many parameters' %}selected{% endif %}>Too many parameters</option>
+            <option value="Long method" {% if comment.subtype == 'Long method' %}selected{% endif %}>Long method</option>
+            <option value="Excessive return of data" {% if comment.subtype == 'Excessive return of data' %}selected{% endif %}>Excessive return of data</option>
+            <option value="Other" {% if comment.subtype == 'Other' %}selected{% endif %}>Other</option>
+        </select>
     {% else %}
     <pre>{{ comment.text }}</pre>
     {% endif %}
